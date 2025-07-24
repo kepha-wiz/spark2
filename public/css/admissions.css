@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.admissions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admissions-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.admissions-header h1 {
+    font-size: 2.5em;
+    color: #333;
+}
+
+.admissions-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admissions-step {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.admissions-step h2 {
+    font-size: 1.8em;
+    color: #007BFF;
+}
+
+.admissions-step p {
+    font-size: 1em;
+    color: #555;
+}
+
+.admissions-faq {
+    margin-top: 40px;
+}
+
+.admissions-faq h2 {
+    font-size: 2em;
+    color: #333;
+}
+
+.faq-item {
+    margin-bottom: 15px;
+}
+
+.faq-item h3 {
+    font-size: 1.5em;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.faq-item p {
+    display: none;
+    font-size: 1em;
+    color: #555;
+}
+
+.faq-item.active p {
+    display: block;
+}
+
+.admissions-form {
+    margin-top: 40px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.admissions-form h2 {
+    font-size: 2em;
+    color: #333;
+}
+
+.admissions-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #555;
+}
+
+.admissions-form input,
+.admissions-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.admissions-form button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.admissions-form button:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,62 @@
+{
+  "researchProjects": [
+    {
+      "title": "Predictive Analytics in Healthcare",
+      "description": "This project focuses on developing predictive models to improve patient outcomes using machine learning techniques.",
+      "faculty": "Dr. Jane Smith",
+      "publicationYear": 2025,
+      "link": "https://sisds.edu/research/predictive-analytics-healthcare"
+    },
+    {
+      "title": "Big Data Techniques for Environmental Monitoring",
+      "description": "Research on utilizing big data analytics to monitor and predict environmental changes and their impacts.",
+      "faculty": "Dr. John Doe",
+      "publicationYear": 2022,
+      "link": "https://sisds.edu/research/big-data-environmental-monitoring"
+    },
+    {
+      "title": "Statistical Methods for Social Science Research",
+      "description": "Exploring advanced statistical methods to analyze social science data and derive meaningful insights.",
+      "faculty": "Dr. Emily Johnson",
+      "publicationYear": 2025,
+      "link": "https://sisds.edu/research/statistical-methods-social-science"
+    },
+    {
+      "title": "Data Science Applications in Finance",
+      "description": "Investigating the application of data science techniques in financial modeling and risk assessment.",
+      "faculty": "Dr. Michael Brown",
+      "publicationYear": 2021,
+      "link": "https://sisds.edu/research/data-science-finance"
+    }
+  ],
+  "publications": [
+    {
+      "title": "Understanding Machine Learning",
+      "authors": ["Dr. Jane Smith", "Dr. John Doe"],
+      "journal": "Journal of Data Science",
+      "year": 2025,
+      "link": "https://sisds.edu/publications/understanding-machine-learning"
+    },
+    {
+      "title": "Data-Driven Decision Making",
+      "authors": ["Dr. Emily Johnson"],
+      "journal": "International Journal of Statistics",
+      "year": 2022,
+      "link": "https://sisds.edu/publications/data-driven-decision-making"
+    }
+  ],
+  "labs": [
+    {
+      "name": "Data Analytics Lab",
+      "description": "A state-of-the-art facility for conducting research in data analytics and machine learning.",
+      "facultyInCharge": "Dr. Jane Smith",
+      "link": "https://sisds.edu/labs/data-analytics"
+    },
+    {
+      "name": "Statistical Research Lab",
+      "description": "Dedicated to advancing statistical methodologies and applications.",
+      "facultyInCharge": "Dr. John Doe",
+      "link": "https://sisds.edu/labs/statistical-research"
+    }
+  ]
+}

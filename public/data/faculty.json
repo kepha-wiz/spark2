@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "name": "Dr. Jane Smith",
+        "title": "Professor of Statistics",
+        "bio": "Dr. Jane Smith has over 20 years of experience in statistical modeling and data analysis. She has published numerous papers in top-tier journals and is a sought-after speaker at international conferences.",
+        "specialization": "Statistical Modeling, Data Analysis",
+        "photo": "assets/images/faculty/jane_smith.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Dr. John Doe",
+        "title": "Associate Professor of Data Science",
+        "bio": "Dr. John Doe specializes in machine learning and big data analytics. He has worked with various industries to implement data-driven solutions.",
+        "specialization": "Machine Learning, Big Data",
+        "photo": "assets/images/faculty/john_doe.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Dr. Emily Johnson",
+        "title": "Assistant Professor of Biostatistics",
+        "bio": "Dr. Emily Johnson focuses on biostatistics and epidemiology. Her research aims to improve public health through data analysis.",
+        "specialization": "Biostatistics, Epidemiology",
+        "photo": "assets/images/faculty/emily_johnson.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Dr. Michael Brown",
+        "title": "Lecturer in Data Science",
+        "bio": "Dr. Michael Brown teaches courses in data visualization and statistical programming. He is passionate about making data accessible to all.",
+        "specialization": "Data Visualization, Statistical Programming",
+        "photo": "assets/images/faculty/michael_brown.jpg"
+    }
+]

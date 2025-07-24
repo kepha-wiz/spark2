@@ -1,0 +1,29 @@
+{
+  "enrollment": {
+    "total_students": 1200,
+    "undergraduate": 800,
+    "graduate": 400
+  },
+  "faculty": {
+    "total_faculty": 50,
+    "full_time": 40,
+    "part_time": 10
+  },
+  "programs_offered": 15,
+  "research_projects": 25,
+  "publications": {
+    "total": 100,
+    "peer_reviewed": 75,
+    "conference_papers": 25
+  },
+  "community_engagement": {
+    "workshops": 10,
+    "outreach_programs": 5,
+    "partnerships": 8
+  },
+  "student_satisfaction": {
+    "overall": 92,
+    "teaching_quality": 95,
+    "resources": 90
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Data Science Webinar",
+      "date": "2025-11-15",
+      "time": "10:00 AM - 11:00 AM",
+      "location": "Online",
+      "description": "Join us for an insightful webinar on the latest trends in data science.",
+      "category": "Webinar",
+      "registrationLink": "https://example.com/register-webinar"
+    },
+    {
+      "id": 2,
+      "title": "Statistics Conference 2025",
+      "date": "2025-12-05",
+      "time": "9:00 AM - 5:00 PM",
+      "location": "Main Auditorium, SISDS",
+      "description": "A full-day conference featuring keynote speakers and panel discussions.",
+      "category": "Conference",
+      "registrationLink": "https://example.com/register-conference"
+    },
+    {
+      "id": 3,
+      "title": "Machine Learning Workshop",
+      "date": "2024-01-10",
+      "time": "1:00 PM - 4:00 PM",
+      "location": "Room 204, SISDS",
+      "description": "Hands-on workshop focusing on practical applications of machine learning.",
+      "category": "Workshop",
+      "registrationLink": "https://example.com/register-workshop"
+    },
+    {
+      "id": 4,
+      "title": "Open House",
+      "date": "2024-02-20",
+      "time": "11:00 AM - 3:00 PM",
+      "location": "SISDS Campus",
+      "description": "Explore our programs and meet faculty members during our open house event.",
+      "category": "Open House",
+      "registrationLink": "https://example.com/register-open-house"
+    }
+  ]
+}

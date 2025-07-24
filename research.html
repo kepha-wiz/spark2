@@ -1,0 +1,768 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover innovative research in data science and applied statistics at SPARK Institute, led by experts in Jinja City, Uganda.">
+  <title>Research - SPARK Institute of Data Science and Applied Statistics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="logo.png" type="image/png">
+  <script src="main.js" defer></script>
+  <style>
+    /* ================================
+       Modern Professional Theme with Enhanced Styling
+       ================================ */
+    :root {
+      --primary: #111827;
+      --primary-light: #374151;
+      --accent: #0077ff;
+      --accent-hover: #005fcc;
+      --accent-light: #e0f2fe;
+      --background: #f9fafb;
+      --surface: #ffffff;
+      --surface-alt: #f3f4f6;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --text-muted: #9ca3af;
+      --border: #e5e7eb;
+      --border-dark: #d1d5db;
+      --error: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --shadow: 6px 6px 16px rgba(0, 0, 0, 0.05), -6px -6px 16px rgba(255, 255, 255, 0.6);
+      --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
+      --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --transition: 0.25s ease-in-out;
+      --transition-slow: 0.4s ease;
+      --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      --line-height: 1.6;
+      --letter-spacing: -0.02em;
+      --breakpoint-sm: 576px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 992px;
+      --breakpoint-xl: 1200px;
+      --gradient-primary: linear-gradient(135deg, #0077ff, #4f46e5);
+      --gradient-hover: linear-gradient(135deg, #005fcc, #4338ca);
+      --highlight: #facc15;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: #f3f4f6;
+        --primary-light: #d1d5db;
+        --accent: #38bdf8;
+        --accent-hover: #0ea5e9;
+        --accent-light: #0c4a6e;
+        --background: #111827;
+        --surface: #1f2937;
+        --surface-alt: #374151;
+        --text: #f9fafb;
+        --text-light: #d1d5db;
+        --text-muted: #9ca3af;
+        --border: #374151;
+        --border-dark: #4b5563;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --gradient-primary: linear-gradient(135deg, #38bdf8, #818cf8);
+        --gradient-hover: linear-gradient(135deg, #0ea5e9, #6366f1);
+        --highlight: #fef08a;
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: linear-gradient(to bottom, var(--background), var(--accent-light));
+      color: var(--text);
+      font-size: 1rem;
+      line-height: var(--line-height);
+      letter-spacing: var(--letter-spacing);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--primary);
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 0.5em;
+      font-family: var(--font-family);
+    }
+
+    h1 { font-size: clamp(2.5rem, 5vw, 3rem); }
+    h2 { font-size: clamp(2rem, 4vw, 2.5rem); }
+    h3 { font-size: clamp(1.75rem, 3vw, 2rem); }
+    h4 { font-size: 1.25rem; }
+    h5 { font-size: 1.1rem; font-weight: 600; }
+    h6 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    p, ul, ol, li, blockquote {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      margin-bottom: 1.2em;
+      max-width: 65ch;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      position: relative;
+      transition: color var(--transition);
+      cursor: pointer;
+    }
+
+    a::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--highlight);
+      transition: width 0.3s ease;
+    }
+
+    a:hover::after {
+      width: 100%;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    a.icon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    header {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    header nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 64px;
+    }
+
+    header .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+
+    .navbar-toggle:hover {
+      background: var(--surface-alt);
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav ul li a {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      color: var(--text);
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    header nav ul li a:hover,
+    header nav ul li a.active {
+      background: var(--gradient-primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 119, 255, 0.3);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .research-card, .publication-card, .lab-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-card::before, .publication-card::before, .lab-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .research-card:hover::before, .publication-card:hover::before, .lab-card:hover::before {
+      opacity: 1;
+    }
+
+    .research-card:hover, .publication-card:hover, .lab-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+      background: linear-gradient(145deg, var(--surface), var(--accent-light));
+    }
+
+    .research-card.active::after, .publication-card.active::after, .lab-card.active::after {
+      content: 'Active';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--highlight);
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+
+    .research-meta, .publication-meta, .lab-meta {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .research-meta .category::before, .publication-meta .category::before, .lab-meta .focus::before {
+      content: '\f02c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      margin-right: 0.5rem;
+    }
+
+    .research-meta .lead::before, .publication-meta .author::before, .lab-meta .lead::before {
+      content: '\f007';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      margin-right: 0.5rem;
+    }
+
+    .btn {
+      background: var(--gradient-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 2px 8px rgba(0, 119, 255, 0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      background: var(--gradient-hover);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    #research-overview, #ongoing-research, #publications, #labs {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    #research-overview {
+      position: relative;
+      padding: 6rem 2rem;
+      text-align: center;
+      background: var(--gradient-primary);
+      color: #fff;
+      border-radius: var(--radius);
+      animation: fadeIn 1s ease-out;
+    }
+
+    #research-overview h1 {
+      color: #fff;
+      background: none;
+    }
+
+    #research-overview p {
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .research-filters {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .research-filters button {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .research-filters button:hover {
+      background: var(--gradient-primary);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .research-filters button.active {
+      background: var(--gradient-primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 119, 255, 0.2);
+    }
+
+    footer {
+      background: var(--surface);
+      color: var(--text-light);
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: linear-gradient(to top, var(--surface-alt), var(--surface));
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      text-align: left;
+    }
+
+    .footer-bottom {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #loader-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity var(--transition-slow);
+    }
+
+    .spark-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .spark-logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    .spark-loader-text {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gradient-primary);
+      border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gradient-hover);
+    }
+
+    @media (max-width: 900px) {
+      header nav {
+        flex-direction: column;
+        height: auto;
+        padding: 12px 16px;
+      }
+      header nav ul {
+        display: none;
+        flex-direction: column;
+        background: var(--surface);
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        z-index: 1001;
+        padding: 0;
+        margin: 0;
+        border-top: 1px solid var(--border);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+      header nav ul.open {
+        display: flex;
+      }
+      .navbar-toggle {
+        display: block;
+        margin-right: 1rem;
+      }
+      header nav ul li {
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      #research-overview {
+        padding: 4rem 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.8rem; }
+      h3 { font-size: 1.5rem; }
+      .research-card, .publication-card, .lab-card {
+        padding: 16px 12px;
+      }
+      #research-overview h1 { font-size: 2rem; }
+      #research-overview p { font-size: 1rem; }
+      #ongoing-research, #publications, #labs {
+        padding: 0 1rem;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+        font-size: 12pt;
+      }
+      nav, #research-overview, footer {
+        display: none;
+      }
+      .research-card, .publication-card, .lab-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader-bg">
+    <div class="spark-loader">
+      <div class="spark-logo"><span>SI</span></div>
+      <div class="spark-loader-text">SPARK Institute...</div>
+    </div>
+  </div>
+
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <span>SI</span> SPARK Institute
+      </a>
+      <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="programs.html">Programs</a></li>
+        <li><a href="admissions.html">Admissions</a></li>
+        <li><a href="research.html" class="active">Research</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="research-overview" class="fade-in">
+      <h1>Research at SPARK Institute</h1>
+      <p class="hero-sub">At SPARK Institute, we push the boundaries of data science and applied statistics through innovative research addressing real-world challenges in Africa and beyond.</p>
+    </section>
+
+    <section id="ongoing-research" class="fade-in">
+      <h2>Ongoing Research Projects</h2>
+      <div class="research-filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="data-science">Data Science</button>
+        <button data-filter="statistics">Statistics</button>
+        <button data-filter="python">Python</button>
+      </div>
+      <div class="main-grid research-projects">
+        <div class="research-card active" data-category="python">
+          <div class="research-meta">
+            <span class="category">Python</span>
+            <span class="lead">Kepha Cherop</span>
+          </div>
+          <h3>Optimizing Predictive Models for Agricultural Yield</h3>
+          <p>Developing Python-based machine learning models to predict crop yields in Uganda using satellite data and weather patterns.</p>
+          <a href="#" class="btn">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="research-card" data-category="statistics">
+          <div class="research-meta">
+            <span class="category">Statistics</span>
+            <span class="lead">Turyamuhaki Noel</span>
+          </div>
+          <h3>Epidemiological Modeling of Malaria Spread</h3>
+          <p>Using statistical models to analyze and predict malaria transmission patterns in East Africa for targeted interventions.</p>
+          <a href="#" class="btn">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="research-card active" data-category="data-science">
+          <div class="research-meta">
+            <span class="category">Data Science</span>
+            <span class="lead">Jumba Fahad</span>
+          </div>
+          <h3>Data-Driven Urban Planning in Jinja</h3>
+          <p>Leveraging data analytics to optimize urban infrastructure and resource allocation in Jinja City.</p>
+          <a href="#" class="btn">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="publications" class="fade-in">
+      <h2>Faculty Publications</h2>
+      <div class="main-grid publications-list">
+        <div class="publication-card">
+          <div class="publication-meta">
+            <span class="category">Python</span>
+            <span class="author">Kepha Cherop</span>
+          </div>
+          <h3>Scalable Data Processing with Dask</h3>
+          <p>Published in Journal of Data Science, 2025. Explores efficient big data processing techniques using Python's Dask library.</p>
+          <a href="#" class="btn">Read Paper <i class="fas fa-file-alt"></i></a>
+        </div>
+        <div class="publication-card">
+          <div class="publication-meta">
+            <span class="category">Statistics</span>
+            <span class="author">Turyamuhaki Noel</span>
+          </div>
+          <h3>Bayesian Approaches to Disease Modeling</h3>
+          <p>Published in Statistical Science Review, 2024. Discusses Bayesian methods for modeling infectious diseases.</p>
+          <a href="#" class="btn">Read Paper <i class="fas fa-file-alt"></i></a>
+        </div>
+        <div class="publication-card">
+          <div class="publication-meta">
+            <span class="category">Data Science</span>
+            <span class="author">Jumba Fahad</span>
+          </div>
+          <h3>Visualizing Urban Growth Patterns</h3>
+          <p>Published in Data Visualization Journal, 2025. Presents advanced visualization techniques for urban data analysis.</p>
+          <a href="#" class="btn">Read Paper <i class="fas fa-file-alt"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="labs" class="fade-in">
+      <h2>Research Labs</h2>
+      <div class="main-grid labs-list">
+        <div class="lab-card active">
+          <div class="lab-meta">
+            <span class="focus">Python</span>
+            <span class="lead">Kepha Cherop</span>
+          </div>
+          <h3>Python Innovation Lab</h3>
+          <p>Focused on advancing Python-based tools for data science, including machine learning and big data analytics.</p>
+          <a href="#" class="btn">Explore Lab <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="lab-card">
+          <div class="lab-meta">
+            <span class="focus">Statistics</span>
+            <span class="lead">Turyamuhaki Noel</span>
+          </div>
+          <h3>Statistical Modeling Lab</h3>
+          <p>Specializes in statistical methodologies for public health and environmental research.</p>
+          <a href="#" class="btn">Explore Lab <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h4>SPARK Institute</h4>
+        <p>Namugere Arcade, Plot 204, First Floor, Jinja City, Uganda</p>
+        <p>Email: <a href="mailto:sparkinstitute2025@outlook.com">sparkinstitute2025@outlook.com</a></p>
+        <p>Phone: <a href="tel:+256706507280">+256 706507280</a></p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="admissions.html">Admissions</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Connect With Us</h4>
+        <p>
+          <a href="#" class="icon-link"><i class="fab fa-twitter"></i> Twitter</a><br>
+          <a href="#" class="icon-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 SPARK Institute of Data Science and Applied Statistics. All rights reserved.</p>
+      <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Loader logic
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const loader = document.getElementById('loader-bg');
+        loader.style.opacity = 0;
+        setTimeout(function() {
+          loader.style.display = 'none';
+        }, 700);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

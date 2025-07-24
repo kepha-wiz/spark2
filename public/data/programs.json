@@ -1,0 +1,32 @@
+{
+  "programs": [
+    {
+      "id": 1,
+      "name": "Bachelor of Science in Statistics",
+      "description": "A comprehensive program that covers the fundamentals of statistical theory and practice, preparing students for careers in data analysis and research.",
+      "duration": "4 years",
+      "link": "brochures/bsc_statistics.pdf"
+    },
+    {
+      "id": 2,
+      "name": "Master of Science in Data Science",
+      "description": "An advanced program focusing on data mining, machine learning, and big data technologies, designed for those looking to deepen their expertise in data science.",
+      "duration": "2 years",
+      "link": "brochures/msc_data_science.pdf"
+    },
+    {
+      "id": 3,
+      "name": "PhD in Statistics",
+      "description": "A research-oriented program aimed at developing advanced statistical methodologies and applications, suitable for aspiring academics and researchers.",
+      "duration": "4-6 years",
+      "link": "brochures/phd_statistics.pdf"
+    },
+    {
+      "id": 4,
+      "name": "Certificate in Data Analytics",
+      "description": "A short-term program designed to equip professionals with essential data analytics skills, focusing on practical applications and tools.",
+      "duration": "6 months",
+      "link": "brochures/certificate_data_analytics.pdf"
+    }
+  ]
+}
