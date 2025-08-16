@@ -1,142 +1,126 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Learn about the admissions process at SPARK Institute of Data Science and Applied Statistics.">
+  <meta name="description" content="Apply to SPARK Institute of Data Science and Applied Statistics. Learn about admission requirements, deadlines, and the application process.">
   <title>Admissions - SPARK Institute of Data Science and Applied Statistics</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="logo.png" type="image/png">
-  <script src="main.js" defer></script>
+
   <style>
     /* ================================
-       Modern Professional Theme v3.0
+       Modern Data Science Theme v4.0
        ================================ */
     :root {
-      --primary: #111827;
-      --primary-light: #374151;
-      --accent: #0077ff;
-      --accent-hover: #005fcc;
-      --accent-light: #e0f2fe;
-      --background: #f9fafb;
+      --primary: #0f172a;
+      --primary-light: #1e293b;
+      --secondary: #1e3a8a;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+      --accent-dark: #1d4ed8;
+      --purple: #8b5cf6;
+      --purple-dark: #7c3aed;
+      --teal: #14b8a6;
+      --teal-dark: #0d9488;
+      --cyan: #06b6d4;
+      --pink: #ec4899;
+      --background: #f1f5f9;
       --surface: #ffffff;
-      --surface-alt: #f3f4f6;
-      --text: #1f2937;
-      --text-light: #6b7280;
-      --text-muted: #9ca3af;
-      --border: #e5e7eb;
-      --border-dark: #d1d5db;
-      --error: #ef4444;
-      --success: #10b981;
-      --warning: #f59e0b;
+      --surface-alt: #e2e8f0;
+      --surface-dark: #334155;
+      --text: #0f172a;
+      --text-light: #64748b;
+      --text-muted: #94a3b8;
+      --text-inverse: #ffffff;
+      --border: #e2e8f0;
+      --border-dark: #64748b;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --gradient-3: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+      --gradient-4: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --gradient-5: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
       --radius: 12px;
       --radius-sm: 8px;
       --radius-lg: 16px;
-      --shadow: 6px 6px 16px rgba(0, 0, 0, 0.05), -6px -6px 16px rgba(255, 255, 255, 0.6);
-      --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
-      --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-      --transition: 0.25s ease-in-out;
-      --transition-slow: 0.4s ease;
-      --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-      --line-height: 1.6;
-      --letter-spacing: -0.02em;
-      --breakpoint-sm: 576px;
-      --breakpoint-md: 768px;
-      --breakpoint-lg: 992px;
-      --breakpoint-xl: 1200px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-colored: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --primary: #f3f4f6;
-        --primary-light: #d1d5db;
-        --accent: #38bdf8;
-        --accent-hover: #0ea5e9;
-        --accent-light: #0c4a6e;
-        --background: #111827;
-        --surface: #1f2937;
-        --surface-alt: #374151;
-        --text: #f9fafb;
-        --text-light: #d1d5db;
-        --text-muted: #9ca3af;
-        --border: #374151;
-        --border-dark: #4b5563;
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --primary: #f1f5f9;
+        --primary-light: #e2e8f0;
+        --secondary: #93c5fd;
+        --accent: #60a5fa;
+        --accent-light: #3b82f6;
+        --accent-dark: #93c5fd;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --surface-alt: #334155;
+        --surface-dark: #475569;
+        --text: #f1f5f9;
+        --text-light: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --border-dark: #475569;
       }
     }
 
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: var(--font-family);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--background);
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(139, 92, 246, 0.05) 0px, transparent 50%);
       color: var(--text);
-      font-size: 1rem;
-      line-height: var(--line-height);
-      letter-spacing: var(--letter-spacing);
-      scroll-behavior: smooth;
+      font-size: 16px;
+      line-height: 1.6;
       overflow-x: hidden;
     }
 
     h1, h2, h3, h4, h5, h6 {
-      color: var(--primary);
       font-weight: 700;
-      line-height: 1.3;
-      margin: 0 0 0.5em;
-      font-family: var(--font-family);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--primary);
     }
 
-    h1 { font-size: clamp(2.5rem, 5vw, 3rem); }
-    h2 { font-size: clamp(2rem, 4vw, 2.5rem); }
-    h3 { font-size: clamp(1.75rem, 3vw, 2rem); }
-    h4 { font-size: 1.25rem; }
-    h5 { font-size: 1.1rem; font-weight: 600; }
-    h6 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--gradient-2);
+      border-radius: 2px;
+    }
 
     p, ul, ol, li, blockquote {
       font-size: 1.05rem;
@@ -148,9 +132,8 @@
     a {
       color: var(--accent);
       text-decoration: none;
+      transition: var(--transition);
       position: relative;
-      transition: color var(--transition);
-      cursor: pointer;
     }
 
     a::after {
@@ -169,51 +152,51 @@
     }
 
     a:hover {
-      color: var(--accent-hover);
+      color: var(--accent-dark);
     }
 
-    a.icon-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
+    /* Header & Navigation */
     header {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: var(--shadow);
-      position: sticky;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-md);
+      position: fixed;
+      width: 100%;
       top: 0;
       z-index: 1000;
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(8px);
     }
 
-    header nav {
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px;
       height: 64px;
     }
 
-    header .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-2);
+      border-radius: 50%;
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 0.5rem;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-colored);
     }
 
     .navbar-toggle {
       display: none;
       background: none;
       border: none;
-      font-size: 2rem;
-      color: var(--text);
+      font-size: 1.5rem;
+      color: var(--primary);
       cursor: pointer;
       padding: 0.5rem;
       border-radius: var(--radius-sm);
@@ -224,174 +207,194 @@
       background: var(--surface-alt);
     }
 
-    header nav ul {
-      list-style: none;
+    nav ul {
       display: flex;
-      gap: 24px;
-      margin: 0;
-      padding: 0;
+      list-style: none;
+      gap: 0.25rem;
     }
 
-    header nav ul li a {
-      padding: 8px 16px;
+    nav ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
       border-radius: var(--radius);
       color: var(--text);
-      transition: all var(--transition);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: var(--transition);
       position: relative;
+      white-space: nowrap;
     }
 
-    header nav ul li a:hover,
-    header nav ul li a.active {
+    nav ul li a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
       background: var(--accent);
-      color: #fff;
-      transform: translateY(-2px);
+      border-radius: 2px;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
     }
 
-    .main-grid {
+    nav ul li a:hover::before,
+    nav ul li a.active::before {
+      width: 70%;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    /* Main */
+    main {
+      margin-top: 64px;
+      min-height: calc(100vh - 64px);
+      padding: 3rem 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    /* Steps */
+    .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-bottom: 48px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
     }
 
-    .card, .faq-item {
+    .step {
       background: var(--surface);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 1.5rem;
       box-shadow: var(--shadow);
+      border-left: 4px solid var(--accent);
       transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .step:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .step-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-2);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    /* Deadlines Table */
+    .deadlines-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .deadlines-table th,
+    .deadlines-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .deadlines-table th {
+      background: var(--gradient-2);
+      color: white;
+      font-weight: 600;
+    }
+
+    .deadlines-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .deadlines-table tr:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    /* FAQ */
+    .faq-item {
+      margin-bottom: 1rem;
       border: 1px solid var(--border);
-      position: relative;
+      border-radius: var(--radius);
       overflow: hidden;
     }
 
-    .card:hover, .faq-item:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
+    .faq-question {
+      padding: 1rem;
+      background: var(--surface-alt);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .card::before, .faq-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-      opacity: 0;
-      transition: opacity var(--transition);
+    .faq-answer {
+      padding: 1rem;
+      background: var(--surface);
+      color: var(--text-light);
+      display: none;
     }
 
-    .card:hover::before, .faq-item:hover::before {
-      opacity: 1;
+    .faq-item.active .faq-answer {
+      display: block;
     }
 
-    .cta-button, .btn, button {
-      background: var(--accent);
-      color: #fff;
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .btn {
+      background: var(--gradient-2);
+      color: white;
       border: none;
       border-radius: var(--radius);
-      padding: 12px 28px;
-      font-size: 1rem;
+      padding: 12px 32px;
+      font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all var(--transition);
-      box-shadow: 0 2px 8px rgba(0, 119, 255, 0.12);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      box-shadow: var(--shadow-colored);
+      text-decoration: none;
+      display: inline-block;
     }
 
-    .cta-button:hover, .btn:hover, button:hover {
-      background: var(--accent-hover);
+    .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 119, 255, 0.2);
+      box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
     }
 
-    button:active {
-      transform: scale(0.97);
-    }
-
-    button:disabled {
-      background: #ccc;
-      color: #666;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--accent);
-      color: var(--accent);
-    }
-
-    .btn-outline:hover {
-      background: var(--accent);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: var(--surface-alt);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background: var(--border-dark);
-      color: var(--text-light);
-    }
-
-    .hero {
-      position: relative;
-      padding: 6rem 2rem;
-      text-align: center;
-      background: linear-gradient(135deg, var(--accent-light) 0%, var(--background) 100%);
-      border-radius: var(--radius);
-      margin: 2rem auto;
-      max-width: 1200px;
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      line-height: 1.2;
-      margin-bottom: 1rem;
-      background: linear-gradient(to right, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-sub {
-      font-size: 1.25rem;
-      color: var(--text-light);
-      max-width: 600px;
-      margin: 0 auto 2rem;
-    }
-
-    .glassbar {
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      transition: all var(--transition);
-    }
-
-    .glassbar:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
+    /* Footer */
     footer {
-      background: var(--surface);
-      color: var(--text-light);
-      text-align: center;
+      background: var(--gradient-4);
+      color: var(--text-inverse);
       padding: 3rem 2rem;
       margin-top: 4rem;
       font-size: 0.95rem;
-      border-top: 1px solid var(--border);
-      border-radius: var(--radius) var(--radius) 0 0;
     }
 
     .footer-content {
@@ -403,10 +406,22 @@
       text-align: left;
     }
 
+    footer h4 {
+      color: var(--accent-light);
+    }
+
+    footer a {
+      color: var(--accent-light);
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
     .footer-bottom {
       margin-top: 2rem;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -414,189 +429,83 @@
       gap: 1rem;
     }
 
-    .m-0 { margin: 0; }
-    .mt-1 { margin-top: 0.25rem; }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-4 { margin-top: 1rem; }
-    .mb-1 { margin-bottom: 0.25rem; }
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .p-4 { padding: 1rem; }
-
-    .d-flex { display: flex; }
-    .d-flex-col { flex-direction: column; }
-    .justify-center { justify-content: center; }
-    .align-center { align-items: center; }
-    .gap-4 { gap: 1rem; }
-
-    .text-center { text-align: center; }
-    .text-left { text-align: left; }
-    .text-right { text-align: right; }
-    .text-uppercase { text-transform: uppercase; }
-    .font-bold { font-weight: 700; }
-    .font-semibold { font-weight: 600; }
-    .font-medium { font-weight: 500; }
-    .font-light { font-weight: 300; }
-
-    @media (max-width: 900px) {
-      header nav {
-        flex-direction: column;
-        height: auto;
-        padding: 12px 16px;
-      }
-      header nav ul {
-        display: none;
-        flex-direction: column;
-        background: var(--surface);
-        position: absolute;
-        top: 64px;
-        left: 0;
-        width: 100%;
-        z-index: 1001;
-        padding: 0;
-        margin: 0;
-        border-top: 1px solid var(--border);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      }
-      header nav ul.open {
-        display: flex;
-      }
-      .navbar-toggle {
-        display: block;
-        margin-right: 1rem;
-      }
-      header nav ul li {
-        width: 100%;
-        text-align: left;
-        border-bottom: 1px solid var(--border);
-      }
-      .hero {
-        padding: 4rem 1rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2.2rem; }
-      h2 { font-size: 1.8rem; }
-      h3 { font-size: 1.5rem; }
-      .card, .faq-item {
-        padding: 16px 12px;
-      }
-      .hero-title { font-size: 2rem; }
-      .hero-sub { font-size: 1rem; }
-      main {
-        padding: 20px 10px;
-      }
-      .footer-content {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--surface);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 20px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-light);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.6s ease-out forwards;
-    }
-
-    @media print {
-      body {
-        background: white;
-        color: black;
-        font-size: 12pt;
-      }
-      nav, .hero, .footer, .glassbar {
-        display: none;
-      }
-      .card, .faq-item {
-        box-shadow: none;
-        border: 1px solid #ddd;
-      }
-    }
-
-    /* Loader Styles */
+    /* Loader */
     #loader-bg {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--background);
+      background: var(--gradient-4);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 10000;
-      transition: opacity var(--transition-slow);
+      z-index: 9999;
+      transition: opacity 0.7s ease;
     }
 
     .spark-loader {
       text-align: center;
-      animation: pulse 1.5s infinite;
     }
 
     .spark-logo {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .spark-logo span {
-      color: var(--accent);
-    }
-
-    .spark-loader-text {
-      font-size: 1.2rem;
-      color: var(--text-light);
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-2);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 1rem;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
 
-    /* Admissions Page Specific Styles */
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+    .spark-loader-text {
+      color: var(--text-inverse);
+      font-weight: 600;
     }
 
-    section {
-      margin-bottom: 3rem;
-    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar-toggle {
+        display: block;
+      }
+      
+      nav ul {
+        position: fixed;
+        top: 64px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 64px);
+        background: var(--surface);
+        flex-direction: column;
+        padding: 2rem;
+        transition: left 0.3s ease;
+        box-shadow: var(--shadow-lg);
+        gap: 0.5rem;
+      }
+      
+      nav ul.open {
+        left: 0;
+      }
 
-    .faq-item {
-      margin-bottom: 1.5rem;
-    }
-
-    #contact p {
-      margin-bottom: 0.5rem;
+      h1 {
+        font-size: 2.2rem;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Loader -->
   <div id="loader-bg">
     <div class="spark-loader">
       <div class="spark-logo"><span>SI</span></div>
@@ -604,12 +513,11 @@
     </div>
   </div>
 
+  <!-- Header -->
   <header>
     <nav>
-      <a href="index.html" class="logo">
-        <span>SI</span> SPARK Institute
-      </a>
-      <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+      <div class="logo">SI</div>
+      <button class="navbar-toggle" aria-label="Toggle navigation">
         <i class="fas fa-bars"></i>
       </button>
       <ul>
@@ -625,56 +533,119 @@
     </nav>
   </header>
 
+  <!-- Main Content -->
   <main>
-    <section class="hero fade-in">
-      <h1 class="hero-title">Admissions Process</h1>
-      <p class="hero-sub">Welcome to the SPARK Institute of Data Science and Applied Statistics admissions page. Find all the information you need to apply.</p>
-    </section>
+    <div class="container">
+      <section class="section">
+        <h1>Admissions at SPARK Institute</h1>
+        <p>Welcome to the admissions portal of SPARK Institute of Data Science and Applied Statistics. We're excited about your interest in joining our community of data innovators.</p>
+      </section>
 
-    <section id="admission-process" class="fade-in">
-      <h2>Steps to Apply</h2>
-      <ol>
-        <li>Complete the online application form.</li>
-        <li>Submit required documents (transcripts, letters of recommendation, etc.).</li>
-        <li>Pay the application fee.</li>
-        <li>Schedule an interview (if required).</li>
-        <li>Receive your admission decision.</li>
-      </ol>
-    </section>
+      <section class="section">
+        <h2>Application Process</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-icon">1</div>
+            <h3>Submit Application</h3>
+            <p>Complete the online form with your personal and academic details.</p>
+          </div>
+          <div class="step">
+            <div class="step-icon">2</div>
+            <h3>Upload Documents</h3>
+            <p>Submit transcripts, CV, letters of recommendation, and statement of purpose.</p>
+          </div>
+          <div class="step">
+            <div class="step-icon">3</div>
+            <h3>Pay Fee</h3>
+            <p>Complete the $50 non-refundable application fee via secure payment.</p>
+          </div>
+          <div class="step">
+            <div class="step-icon">4</div>
+            <h3>Interview</h3>
+            <p>Shortlisted candidates will be invited for a virtual interview.</p>
+          </div>
+        </div>
+      </section>
 
-    <section id="deadlines" class="fade-in">
-      <h2>Application Deadlines</h2>
-      <ul>
-        <li>Fall Semester: June 1</li>
-        <li>Spring Semester: November 1</li>
-        <li>Summer Semester: March 1</li>
-      </ul>
-    </section>
+      <section class="section">
+        <h2>Application Deadlines</h2>
+        <table class="deadlines-table">
+          <thead>
+            <tr>
+              <th>Semester</th>
+              <th>Deadline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fall Semester</td>
+              <td>June 1</td>
+            </tr>
+            <tr>
+              <td>Spring Semester</td>
+              <td>November 1</td>
+            </tr>
+            <tr>
+              <td>Summer Semester</td>
+              <td>March 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-    <section id="faq" class="fade-in">
-      <h2>Frequently Asked Questions</h2>
-      <div class="faq-item">
-        <h3>What are the admission requirements?</h3>
-        <p>Applicants must have a bachelor's degree or equivalent and meet specific program prerequisites.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Is there an application fee?</h3>
-        <p>Yes, there is a non-refundable application fee of $50.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Can I apply for financial aid?</h3>
-        <p>Yes, we encourage all students to apply for financial aid. Please visit our <a href="#">financial aid page</a> for more information.</p>
-      </div>
-    </section>
+      <section class="section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <div class="faq-question">
+            What are the admission requirements? <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Applicants must hold a bachelor's degree in a quantitative field (mathematics, statistics, computer science, or related) with a minimum GPA of 3.0. Some programs may require prerequisite coursework in calculus, linear algebra, or programming.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Is there an application fee? <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Yes, there is a $50 non-refundable application fee. Fee waivers are available for eligible candidates based on financial need or participation in partner programs.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Can I apply for financial aid or scholarships? <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Yes! We offer merit-based scholarships, need-based aid, and research assistantships. All admitted students are automatically considered for funding opportunities.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            What if English is not my first language? <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Non-native English speakers must submit TOEFL (minimum 90 iBT) or IELTS (minimum 6.5) scores. Waivers may be granted for applicants who completed prior education in English.
+          </div>
+        </div>
+      </section>
 
-    <section id="contact" class="fade-in">
-      <h2>Contact Admissions</h2>
-      <p>If you have any questions, please reach out to our admissions office:</p>
-      <p>Email: <a href="mailto:sparkinstitute2025@outlook.com">sparkinstitute2025@outlook.com</a></p>
-      <p>Phone: <a href="tel:+256706507280">+256 706507280</a></p>
-    </section>
+      <section class="section cta-section">
+        <h2>Ready to Apply?</h2>
+        <p>Take the next step toward your data science career.</p>
+        <a href="#" class="btn">Start Your Application</a>
+      </section>
+
+      <section class="section">
+        <h2>Contact Admissions</h2>
+        <p>Have questions? Our team is here to help.</p>
+        <p><i class="fas fa-envelope"></i> Email: <a href="mailto:admissions@sparkinstitute.ac.ug">admissions@sparkinstitute.ac.ug</a></p>
+        <p><i class="fas fa-phone"></i> Phone: <a href="tel:+256755261254">+256 755 261 254</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> Location: Namugere Arcade, Plot 204, Jinja City, Uganda</p>
+      </section>
+    </div>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="footer-content">
       <div>
@@ -706,17 +677,60 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
-    // Loader logic
-    window.addEventListener('DOMContentLoaded', function () {
-      setTimeout(function () {
-        const loader = document.getElementById('loader-bg');
-        loader.style.opacity = 0;
-        setTimeout(function () {
-          loader.style.display = 'none';
-        }, 700);
+    document.addEventListener("DOMContentLoaded", function () {
+      const loader = document.getElementById("loader-bg");
+      const navToggle = document.querySelector(".navbar-toggle");
+      const navUl = document.querySelector("nav ul");
+
+      // Hide loader
+      setTimeout(() => {
+        if (loader) {
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 700);
+        }
+
+        // Mobile menu
+        if (navToggle && navUl) {
+          navToggle.addEventListener("click", () => {
+            navUl.classList.toggle("open");
+          });
+
+          navUl.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+              navUl.classList.remove("open");
+            });
+          });
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll(".faq-question").forEach(button => {
+          button.addEventListener("click", () => {
+            const item = button.parentElement;
+            item.classList.toggle("active");
+            const icon = button.querySelector("i");
+            if (item.classList.contains("active")) {
+              icon.classList.replace("fa-chevron-down", "fa-chevron-up");
+            } else {
+              icon.classList.replace("fa-chevron-up", "fa-chevron-down");
+            }
+          });
+        });
+
       }, 1200);
     });
+
+    // Failsafe loader hide
+    setTimeout(() => {
+      const loader = document.getElementById("loader-bg");
+      if (loader && loader.style.display !== "none") {
+        loader.style.opacity = 0;
+        loader.style.display = "none";
+      }
+    }, 3000);
   </script>
 </body>
 </html>
